@@ -20,7 +20,7 @@
           - gnupg-agent
           - software-properties-common
 
-    - name: Add Docker's repo
+    - name: Add key to Docker repository
       shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
       
     - name: Setup stable repository
@@ -40,12 +40,12 @@
     - name: Check if docker is up and running
       shell: docker ps
     
-    - name: Add Kubernetes repository
+    - name: Add key to Kubernetes repository
       shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     
-    - name: Kubernetes repository setup
-      shell: cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list deb https://apt.kubernetes.io/ kubernetes-xenial main EOF
-    
+    - name: Kubernetes add repository
+      shell: sudo add-apt-repository "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+
     - name: Update apt
       apt:
        update_cache: yes
@@ -73,5 +73,6 @@
         selection: hold
     
     - name: Check if Kubernetes is up and running
-      shell: kubectl get pods
+      shell: kubeadm version
+
 

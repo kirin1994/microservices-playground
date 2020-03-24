@@ -6,7 +6,8 @@ ANSIBLE_PATH="k8s-cluster/infrastructure/ansible"
 case $1 in
     "up") cd $VAGRANT_PATH && vagrant up ;;
     "destroy") cd $VAGRANT_PATH && vagrant destroy ;;
-    "ping") ansible -i $ANSIBLE_INVENTORY_PATH/inventory all -m ping ;;
-    "k8s-install") ansible-playbook -i k8s-cluster/infrastructure/ansible/inventory  k8s-cluster/infrastructure/ansible/k8s-install-playbook.yaml ;;
+    "ping") ansible -i $ANSIBLE_PATH/inventory all -m ping ;;
+    "k8s-install") ansible-playbook -i $ANSIBLE_PATH//inventory  $ANSIBLE_PATH/playbooks/k8s-install.yaml ;;
+    "k8s-create-cluster") ansible-playbook -i $ANSIBLE_PATH/inventory  $ANSIBLE_PATH/playbooks/k8s-create-cluster.yaml ;;
     *) echo "Param not found"
 esac
