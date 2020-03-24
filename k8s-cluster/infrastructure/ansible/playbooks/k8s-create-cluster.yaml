@@ -4,3 +4,33 @@
   tasks:
     - name: Check if master node is up and running
       ping:
+    
+    - name: Disable swap
+      shell: swapoff -a
+    
+    - name: Init Kubernetes claster with kubeadm
+      shell: kubeadm init --pod-network-cidr=192.168.0.0/16
+    
+    - name: Create home .kube config directory
+      file:
+        path: /home/vagrant/.kube
+        state: directory
+        mode: '0755'
+    
+    - name: Copy kubeconfig
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/vagrant/.kube/config
+        remote_src: yes
+
+    - name: Add permissions to config file
+      file:
+        path: /home/vagrant/.kube/config
+        owner: vagrant
+        group: vagrant
+    
+    - name: Add Calcio networking pod
+      become_user: vagrant
+      shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+### zmienic teraz chowna na usera bo jest root
