@@ -25,12 +25,12 @@
       
     - name: Setup stable repository
       shell: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    
+      
     - name: Update apt
       apt: 
         update_cache: yes
     
-    - name: Install docker
+    - name: Install Docker
       apt:
         pkg:
           - docker-ce
@@ -39,3 +39,39 @@
     
     - name: Check if docker is up and running
       shell: docker ps
+    
+    - name: Add Kubernetes repository
+      shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    
+    - name: Kubernetes repository setup
+      shell: cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list deb https://apt.kubernetes.io/ kubernetes-xenial main EOF
+    
+    - name: Update apt
+      apt:
+       update_cache: yes
+
+    - name: Install Kubernetes packages
+      apt:
+        pkg:
+          - kubelet
+          - kubeadm
+          - kubectl
+    
+    - name: Lock kubelet version
+      dpkg_selections:
+        name: kubelet
+        selection: hold
+
+    - name: Lock kubeadm version
+      dpkg_selections:
+        name: kubeadm
+        selection: hold
+    
+    - name: Lock kubectl version
+      dpkg_selections: 
+        name: kubectl
+        selection: hold
+    
+    - name: Check if Kubernetes is up and running
+      shell: kubectl get pods
+
